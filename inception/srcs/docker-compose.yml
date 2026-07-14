@@ -55,8 +55,6 @@ networks:
   inception:
     driver: bridge
 
-# Les deux volumes pointent vers /home/LOGIN/data sur la machine hote,
-# comme demande dans le sujet. Remplace LOGIN par ton login 42.
 volumes:
   db_data:
     driver: local

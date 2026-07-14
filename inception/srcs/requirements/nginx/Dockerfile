@@ -1,7 +1,5 @@
 FROM debian:bookworm
 
-# openssl pour generer le certificat TLS, gettext-base pour la commande
-# envsubst utilisee dans notre script de demarrage
 RUN apt-get update && apt-get install -y --no-install-recommends \
     nginx \
     openssl \
