@@ -1,0 +1,5 @@
+[mysqld]
+# Par defaut MariaDB n'ecoute qu'en local (127.0.0.1).
+# On l'ouvre a toutes les interfaces pour que le container wordpress
+# puisse s'y connecter via le reseau docker.
+bind-address = 0.0.0.0

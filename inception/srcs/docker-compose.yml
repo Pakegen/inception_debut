@@ -1,0 +1,80 @@
+services:
+
+  mariadb:
+    build:
+      context: ./requirements/mariadb
+    image: mariadb
+    container_name: mariadb
+    env_file:
+      - .env
+    secrets:
+      - db_password
+      - db_root_password
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - inception
+    restart: unless-stopped
+
+  wordpress:
+    build:
+      context: ./requirements/wordpress
+    image: wordpress
+    container_name: wordpress
+    env_file:
+      - .env
+    secrets:
+      - db_password
+      - credentials
+    volumes:
+      - wp_data:/var/www/html
+    networks:
+      - inception
+    depends_on:
+      - mariadb
+    restart: unless-stopped
+
+  nginx:
+    build:
+      context: ./requirements/nginx
+    image: nginx
+    container_name: nginx
+    env_file:
+      - .env
+    volumes:
+      - wp_data:/var/www/html
+    ports:
+      - "443:443"
+    networks:
+      - inception
+    depends_on:
+      - wordpress
+    restart: unless-stopped
+
+networks:
+  inception:
+    driver: bridge
+
+# Les deux volumes pointent vers /home/LOGIN/data sur la machine hote,
+# comme demande dans le sujet. Remplace LOGIN par ton login 42.
+volumes:
+  db_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/LOGIN/data/mariadb
+  wp_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/LOGIN/data/wordpress
+
+secrets:
+  db_password:
+    file: ../secrets/db_password.txt
+  db_root_password:
+    file: ../secrets/db_root_password.txt
+  credentials:
+    file: ../secrets/credentials.txt
