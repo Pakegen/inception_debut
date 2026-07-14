@@ -3,14 +3,18 @@ set -e
 
 DB_PASSWORD=$(cat /run/secrets/db_password)
 
+# credentials.txt contient 2 lignes : mot de passe admin, puis mot de passe du 2e user
 WP_ADMIN_PASSWORD=$(sed -n '1p' /run/secrets/credentials)
 WP_USER_PASSWORD=$(sed -n '2p' /run/secrets/credentials)
 
+# On ne telecharge et configure wordpress qu'au tout premier lancement.
+# wp-config.php vit dans le volume partage avec nginx, donc il persiste.
 if [ ! -f "/var/www/html/wp-config.php" ]; then
     echo ">> Premier lancement : telechargement et configuration de WordPress"
 
     wp core download --allow-root
 
+    # MariaDB peut mettre quelques secondes a etre pret : on attend
     until mysqladmin ping -h mariadb --silent; do
         echo "En attente de MariaDB..."
         sleep 2

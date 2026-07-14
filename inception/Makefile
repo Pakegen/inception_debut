@@ -1,3 +1,4 @@
+# Remplace LOGIN par ton login 42 (ex: wil)
 LOGIN = LOGIN
 DATA_DIR = /home/$(LOGIN)/data
 COMPOSE = srcs/docker-compose.yml

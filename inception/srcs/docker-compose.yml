@@ -5,6 +5,7 @@ services:
       context: ./requirements/mariadb
     image: mariadb
     container_name: mariadb
+    init: true
     env_file:
       - .env
     secrets:
@@ -21,6 +22,7 @@ services:
       context: ./requirements/wordpress
     image: wordpress
     container_name: wordpress
+    init: true
     env_file:
       - .env
     secrets:
@@ -39,6 +41,7 @@ services:
       context: ./requirements/nginx
     image: nginx
     container_name: nginx
+    init: true
     env_file:
       - .env
     volumes:
